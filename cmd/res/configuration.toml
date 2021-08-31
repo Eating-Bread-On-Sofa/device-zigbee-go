@@ -1,0 +1,67 @@
+[Service]
+Host = "0.0.0.0"
+Port = 50002
+ConnectRetries = 3
+Labels = []
+OpenMsg = "device zigbee started"
+MaxResultCount = 50000
+Timeout = 5000
+EnableAsyncReadings = true
+AsyncBufferSize = 16
+
+[Registry]
+Host = "0.0.0.0"
+Port = 8500
+CheckInterval = "10s"
+FailLimit = 3
+FailWaitTime = 10
+Type = "consul"
+
+[Logging]
+EnableRemote = false
+File = "./device-zigbee.log"
+Level = "DEBUG"
+
+[Clients]
+  [Clients.Data]
+  Name = "edgex-core-data"
+  Protocol = "http"
+  Host = "0.0.0.0"
+  Port = 48080
+  Timeout = 5000
+
+  [Clients.Metadata]
+  Name = "edgex-core-metadata"
+  Protocol = "http"
+  Host = "0.0.0.0"
+  Port = 48081
+  Timeout = 5000
+
+  [Clients.Logging]
+  Name = "edgex-support-logging"
+  Protocol = "http"
+  Host = "0.0.0.0"
+  Port = 48061
+
+[Device]
+  DataTransform = true
+  InitCmd = ""
+  InitCmdArgs = ""
+  MaxCmdOps = 128
+  MaxCmdValueLen = 256
+  RemoveCmd = ""
+  RemoveCmdArgs = ""
+
+# Pre-define Devices
+# [[DeviceList]]
+#   Name = "Zigbee-device01"
+#   Profile = "temperature sensor profile"
+#   Description = "Example of Zigbee Device"
+#   Labels = [ "industrial" ]
+#   [DeviceList.Protocols]
+#     [DeviceList.Protocols.zigbee]
+#       Port = "8891"
+#   [[DeviceList.AutoEvents]]
+#     Frequency = "30s"
+#     OnChange = false
+#     Resource = "value"
