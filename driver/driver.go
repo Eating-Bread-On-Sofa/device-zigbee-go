@@ -26,8 +26,8 @@ var once sync.Once
 var driver *Driver
 
 type Driver struct {
-	lc            logger.LoggingClient
-	asyncCh       chan<- *dsModels.AsyncValues
+	lc      logger.LoggingClient
+	asyncCh chan<- *dsModels.AsyncValues
 }
 
 func NewProtocolDriver() dsModels.ProtocolDriver {
@@ -71,22 +71,22 @@ func (d *Driver) HandleReadCommands(deviceName string, protocols map[string]mode
 		return
 	}
 
-	result,_ := simplejson.NewJson(body)
+	result, _ := simplejson.NewJson(body)
 	nums := result.Get("result")
-	data,_ := nums.Get("Nums").Array()
+	data, _ := nums.Get("Nums").Array()
 
-	var v int
+	var v float64
 
-	for _,da := range data{
+	for _, da := range data {
 		newda, _ := da.(map[string]interface{})
-		v,_ = strconv.Atoi(fmt.Sprint(newda["num"]))
+		v, _ = strconv.ParseFloat(fmt.Sprint(newda["num"]), 64)
 		break
 	}
 
-	cv, _ := dsModels.NewInt64Value(reqs[0].DeviceResourceName, now, int64(v))
+	cv, _ := dsModels.NewFloat64Value(reqs[0].DeviceResourceName, now, v)
 	res[0] = cv
 
-	return res,nil
+	return res, nil
 }
 
 func (d *Driver) HandleWriteCommands(deviceName string, protocols map[string]models.ProtocolProperties, reqs []dsModels.CommandRequest,
