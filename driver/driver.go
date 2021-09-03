@@ -59,7 +59,7 @@ func (d *Driver) HandleReadCommands(deviceName string, protocols map[string]mode
 	res = make([]*dsModels.CommandValue, 1)
 	now := time.Now().UnixNano()
 
-	resp, err := http.Get("http://localhost:8092/mongoFind")
+	resp, err := http.Get("http://localhost:7092/mongoFind")
 	if err != nil {
 		fmt.Printf("get failed, err:%v\n", err)
 		return
@@ -83,7 +83,9 @@ func (d *Driver) HandleReadCommands(deviceName string, protocols map[string]mode
 		break
 	}
 
-	cv, _ := dsModels.NewFloat64Value(reqs[0].DeviceResourceName, now, v)
+	var daa int64
+	daa = int64(v)
+	cv, _ := dsModels.NewInt64Value(reqs[0].DeviceResourceName, now, daa)
 	res[0] = cv
 
 	return res, nil
